@@ -1,6 +1,7 @@
 package com.baiching.web.jdbc;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -66,6 +67,39 @@ public class StudentDbUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+
+	public void addStudent(Student theStudent) throws Exception {
+		
+		Connection myConn = null;
+		PreparedStatement myStmt = null;
+		//ResultSet myRs = null;
+		
+		try {
+			// get db connection
+			myConn = dataSource.getConnection();
+			
+			// create sql form insert
+			String sql = "INSERT INTO student "
+						+ "(first_name, last_name, email) "
+						+ "values (?, ?, ?);";
+			
+			myStmt = myConn.prepareStatement(sql);
+			
+			// set param value for the student
+			myStmt.setString(1, theStudent.getFirstName());
+			myStmt.setString(2, theStudent.getLastName());
+			myStmt.setString(3, theStudent.getEmail());
+			//execute sql insert
+			myStmt.execute();
+		} finally {
+			//clean up JDBC objects
+			close(myConn, myStmt, null);
+		}
+		
+		
+		
 		
 	}
 
